@@ -1,0 +1,7 @@
+name = Author
+description = Author module use to create content types for Author and Story
+package = Custom Content Type
+core = 7.x
+dependencies[] = email
+files[] = author.install
+files[] = author.module

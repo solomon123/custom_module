@@ -1,0 +1,4 @@
+name = Author Block
+description = Display the author name ane email at the Story page
+package = Custom Block Type
+core = 7.x

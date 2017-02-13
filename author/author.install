@@ -1,0 +1,123 @@
+<?php
+
+/**
+ * Implements hook_enable().
+ */
+
+function author_enable(){
+/**
+* Creating a content type
+*
+*/
+$types = array(
+    array(
+      'type' => 'author',
+      'base' => 'node_content',
+      'name' => t('Author page'),
+      'has_title' => FALSE, //TRY TO HIDE THE TITLE
+      'description' => t("Use Author pages for updating Author details."),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+      
+    ),
+    array(
+      'type' => 'story',
+      'base' => 'node_content',
+      'name' => t('Story Page'),
+      'description' => t('Use Story Page for updating stories.'),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+      
+    ),
+  );
+
+  foreach ($types as $type) {
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+   
+  }
+
+
+      
+/**
+ * Creating a field name
+ */
+      $field_name = array(
+        array(
+            'field_name' => 'first_name',
+            'type' => 'text',
+            'description' => 'First name filed type',
+            'lable' => 'First name',
+            'widget_type' => 'textfield',
+          ),
+        array(
+            'field_name' => 'last_name',
+            'type' => 'text',
+            'description' => 'Last name filed type',
+            'lable' => 'Last name',
+            'widget_type' => 'textfield',
+          ),
+        array(
+            'field_name' => 'display_name',
+            'type' => 'text',
+            'description' => 'Display name filed type',
+            'lable' => 'Display name',
+            'widget_type' => 'textfield',
+          ),
+        array(
+            'field_name' => 'email',
+            'type' => 'email',
+            'description' => 'Email filed type',
+            'lable' => 'Email',
+            'widget_type' => 'textfield',
+          ),
+        );
+
+
+
+/**
+ * Verify fields existance and Create field definition and creat a field
+ */
+
+    foreach($field_name as $fn){
+      //  Verify the field does not already exist.
+      if ( field_info_field( $fn['field_name'] ) ) {
+          return;
+      }
+
+      //  Create the field definition array.
+      $field = array(
+          'field_name' => $fn['field_name'],
+          'type' => $fn['type'],
+
+      );
+
+      //  Create the field.
+      $field = field_create_field( $field );
+
+    }
+
+
+/**
+ * Create the field instance definition array.
+ */
+
+    foreach($field_name as $key){
+      $instance = array(
+          'field_name' => $key[ 'field_name' ],
+          'entity_type' => 'node',
+          'bundle' => 'author',
+          'description' => $key[ 'description' ],
+          'label' => $key[ 'lable' ],
+          'widget' => array(
+              'type' => $key[ 'widget_type' ],
+          ),
+      );
+
+      //  Create an instance of the field and bind it to the bundle.
+      field_create_instance($instance);
+    }
+
+}

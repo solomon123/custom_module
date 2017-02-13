@@ -1,0 +1,108 @@
+<?php
+
+/**
+ * Implements hook_enable().
+ */
+
+function story_enable(){
+/**
+* Creating a content type
+*
+*/
+      
+      $field_name = array(
+        array(
+            'field_name' => 'story_text',
+            'type' => 'text',
+            'description' => 'story filed type',
+            'lable' => 'Text',
+            'widget_type' => 'textfield',
+          ),
+        array(
+            'field_name' => 'story_featured_image',
+            'type' => 'image',
+            'description' => 'Story featured image filed type',
+            'lable' => 'Featured Image',
+            'widget_type' => 'image',
+          ),
+         array(
+            'field_name' => 'story_promotional_reference',
+            'type' => 'link_field',
+            'description' => 'Email name filed type',
+            'lable' => 'Story Promotional Rreference',
+            'widget_type' => 'link',
+          ),
+        array(
+            'field_name' => 'author_profile',
+            'type' => 'entityreference', 
+            'description' => 'Story Author name filed type',
+            'lable' => 'Author Profile',
+            'widget_type' => 'options_select',
+          ),
+       
+        );
+
+
+ foreach($field_name as $fn){
+      //  Verify the field does not already exist.
+      if ( field_info_field( $fn['field_name'] ) ) {
+          return;
+      }
+      
+      switch ($fn['field_name']) {
+        case 'author_profile' :
+             $field = array(
+              'field_name' => $fn['field_name'],
+              'type' => $fn['type'],
+              'cardinality' => FIELD_CARDINALITY_UNLIMITED,      
+                'settings' =>array(
+                    'target_type' => 'node',
+                    'target_bundles' => array('author'),
+
+                  ),
+              );
+            break;
+          case 'story_promotional_reference' :
+              $field = array(
+              'field_name' => $fn['field_name'],
+              'type' => $fn['type'],
+              'cardinality' => 1, 
+              'settings' => array(
+                    'title' => 'none',
+                        'attributes' => array(
+                        'target' => '_blank',
+                          ),
+                   ),
+             );
+        default:
+            $field = array(
+              'field_name' => $fn['field_name'],
+              'type' => $fn['type'],
+              );
+          }
+
+          //  Create the field.
+          $field = field_create_field( $field );
+
+        }
+
+/**
+ * Create the field instance definition array.
+ */
+
+    foreach($field_name as $key){
+      $instance = array(
+          'field_name' => $key[ 'field_name' ],
+          'entity_type' => 'node',
+          'bundle' => 'story',
+          'description' => $key[ 'description' ],
+          'label' => $key[ 'lable' ],
+          'widget' => array(
+              'type' => $key[ 'widget_type' ],
+          ),
+      );
+
+      //  Create an instance of the field and bind it to the bundle.
+      field_create_instance($instance);
+    }
+}

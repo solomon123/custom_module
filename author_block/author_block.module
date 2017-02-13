@@ -1,0 +1,77 @@
+<?php
+/**
+ * @file
+ * author_block.module
+ */
+
+
+
+/**
+ * 
+ * Implements hook_block_info().
+ */
+function author_block_block_info() {
+  $blocks = array();
+  $blocks['author_block'] = array(
+    'info' => t('Author Block Module'),
+    'status' => TRUE,
+  );
+  return $blocks;
+}
+
+
+/**
+ * Implements hook_block_view().
+ */
+ function author_block_block_view($delta = '') {
+ $block = array();
+
+ switch ($delta) {
+   case 'author_block':
+     $block['subject'] = 'Story Author';
+     $block['content'] = author_block_content($delta);
+    
+
+     return $block;
+     break;
+  }
+ 
+}
+
+function author_block_content($delta =''){
+
+  switch ($delta) {
+   case 'author_block':
+    
+    $path = $_SERVER["REQUEST_URI"];
+    $node_path = explode('node/', drupal_get_normal_path($path));
+    $nid = $node_path[1];
+    
+    if(isset($nid)){
+
+
+      $query = 'SELECT aid.author_profile_target_id, aid.entity_id, field_data_display_name.display_name_value, field_data_email.email_email
+               FROM {field_data_author_profile} AS aid
+               INNER JOIN({field_data_display_name} ,{field_data_email}) 
+               ON aid.author_profile_target_id=field_data_display_name.entity_id WHERE aid.entity_id = '.$nid; 
+        
+          $result = db_query($query);
+
+          $items = array();
+
+          foreach ($result as $row) {
+            $items[] = l($row->display_name_value, 'node/' .$row->entity_id);
+            $items[] = l($row->email_email, 'node/' .$row->entity_id);
+          }
+
+          return array('#markup' =>theme('item_list', array('items'=>$items)) );
+      } else{
+
+        return "";
+      }
+   break;  
+  }
+
+}
+
+

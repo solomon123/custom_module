@@ -1,0 +1,12 @@
+name = Story
+description = Story module use to create content types for Story
+package = Custom Content Type
+core = 7.x
+dependencies[] = ctools
+dependencies[] = entity
+dependencies[] = entityreference
+dependencies[] = link
+dependencies[] = email
+
+files[] = story.install
+files[] = story.module
