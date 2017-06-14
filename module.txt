@@ -1,0 +1,24 @@
+
+Assessment 
+
+1) Build out 2 content types via code with the following fields: 
+
+	A. Story 
+		a. Title (text) 
+		b. Text (long text) 
+		c. Featured Image (image upload) 
+		d. Author Profile (entity reference to Author) 
+		e. Promotional Reference (URL field) 
+	B. Author 
+		a. First Name (text) 
+		b. Last Name (text) 
+		c. Display Name (text) 
+		d. Email Address (text) 
+
+2. Write a module
+
+	A. Display a block with the following fields for an Author within the Story node: 
+		a. Display Name 
+		b. Email Address 
+
+
